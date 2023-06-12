@@ -1,73 +1,42 @@
-# GPT4All Python API
 
-## Intro
+# GPT4All Flask Server
 
-The GPT4All package provides Python bindings and an API to our C/C++ model backend libraries. This README will provide instructions on how to install and use the package, as well as an API reference for the available methods.
+This repository contains the source code for a Flask server that provides endpoints for interacting with the GPT4All language models. The server supports chat completions, text generation, model retrieval, and model listing. It uses the GPT4All python bindings to interface with the models.
 
-The material in this README is based on the documentation found at [GPT4All Python API](https://docs.gpt4all.io/gpt4all_python.html).
+## Prerequisites
 
-## Installation
+- Python 3.9
+- Docker
 
-To install the GPT4All package, run the following command:
+## Getting Started
 
-```python
-pip install gpt4all
-```
+To run the server locally, follow these steps:
 
-## Quickstart
+1. Clone the repository:
 
-In Python, run the following commands to retrieve a GPT4All model and generate a response to a prompt:
+   ```shell
+   git clone https://github.com/StarKeyJON/llm-api-docker
+   ```
 
-```python
-import gpt4all
+2. Change to the project directory:
 
-gptj = gpt4all.GPT4All("ggml-gpt4all-j-v1.3-groovy")
-messages = [{"role": "user", "content": "Name 3 colors"}]
-gptj.chat_completion(messages)
-```
+   ```shell
+   cd your_repository
+   ```
 
-## Flask Server
+3. Install the required dependencies:
 
-A Flask server is included with the GPT4All Python API package. The server provides endpoints for chat completion, text generation, model retrieval, and model listing. Below is an example of how to use the Flask server to access the API's endpoints:
+   ```shell
+   pip install -r requirements.txt
+   ```
 
-```python
-from flask import Flask, jsonify, request
-from gpt4all import GPT4All
+4. Start the Flask server:
 
-app = Flask(__name__)
-gptj = GPT4All("ggml-gpt4all-j-v1.3-groovy")
+   ```shell
+   python server.py
+   ```
 
-@app.route('/v0/language-models/chat-completions', methods=['POST'])
-def chat():
-    data = request.get_json()
-    messages = data.get('messages')
-    response = gptj.chat_completion(messages)
-    return jsonify(response)
-
-@app.route('/v0/language-models/generate', methods=['POST'])
-def generate():
-    data = request.get_json()
-    prompt = data['prompt']
-    response = gptj.generate(prompt)
-    return jsonify(response)
-
-@app.route('/v0/language-models/retrieve', methods=['POST'])
-def retrieve():
-    data = request.get_json()
-    model_name = data['model_name']
-    model_path = data.get('model_path', None)
-    allow_download = data.get('allow_download', True)
-    response = GPT4All.retrieve_model(model_name, model_path, allow_download)
-    return jsonify(response)
-
-@app.route('/v0/models', methods=['GET'])
-def models():
-    response = GPT4All.list_models()
-    return jsonify(response)
-
-if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=4200)
-```
+   The server will start running on `http://localhost:8888`.
 
 ## Supported Models
 
@@ -83,7 +52,94 @@ The supported architectures are:
 
 There are two methods to interface with the underlying language model: `chat_completion()` and `generate()`. `chat_completion()` formats a user-provided message dictionary into a prompt template (see API documentation for more details and options). This will usually produce much better results and is the approach we recommend. You may also prompt the model with `generate()` which will just pass the raw input string to the model.
 
-## API Reference
+## API Endpoints
+
+The server provides the following API endpoints:
+
+### `/v0/language-models/chat-completions` (POST)
+
+This endpoint performs chat completions using the GPT4All model. It expects a JSON payload with a `messages` field containing an array of message objects. Each message object should have a `role` ("system", "user", or "assistant") and `content` (the message text).
+
+Example request payload:
+
+```json
+{
+  "messages": [
+    {"role": "user", "content": "Tell me a joke"},
+    {"role": "assistant", "content": "Why don't scientists trust atoms?"},
+    {"role": "user", "content": "I don't know, why?"},
+    {"role": "assistant", "content": "Because they make up everything!"}
+  ]
+}
+```
+
+Example response:
+
+```json
+{
+  "id": "chat-completions-1623419351.123456",
+  "replies": [
+    {"role": "assistant", "content": "Because they make up everything!"}
+  ]
+}
+```
+
+### `/v0/language-models/generate` (POST)
+
+This endpoint generates text based on a given prompt using the GPT4All model. It expects a JSON payload with a `prompt` field containing the text prompt.
+
+Example request payload:
+
+```json
+{
+  "prompt": "Once upon a time"
+}
+```
+
+Example response:
+
+```json
+{
+  "id": "generate-1623419351.123456",
+  "text": "Once upon a time, in a land far away..."
+}
+```
+
+### `/v0/language-models/retrieve` (POST)
+
+This endpoint retrieves a pre-trained model for use with the GPT4All ecosystem. It expects a JSON payload with a `model_name` field specifying the model to retrieve. Optionally, you can provide a `model_path` to specify the directory to save the model, and an `allow_download` flag to control whether the model can be downloaded.
+
+Example request payload:
+
+```json
+{
+  "model_name": "gptj",
+  "model_path": "/path/to/save/model",
+  "allow_download": true
+}
+```
+
+Example response:
+
+```json
+{
+  "success": true,
+  "message": "Model retrieved successfully."
+}
+```
+
+### `/v0/models` (GET)
+
+This endpoint lists the available models in the GPT4All ecosystem.
+
+Example response:
+
+```json
+{
+  "models": ["gptj", "llama", "mpt"]
+}
+```
+## API References
 
 ### `gpt4all.GPT4All(model_name, model_path=None, model_type=None, allow_download=True)`
 
@@ -144,35 +200,37 @@ Returns:
 
 - `str`: Raw string of generated model response.
 
+## Docker
+
+A Dockerfile is provided to simplify the deployment of the Flask server. To build and run the Docker image, follow these steps:
+
+1. Build the Docker
+ image:
+
+   ```shell
+   docker build -t gpt4all-flask-server .
+   ```
+
+2. Run the Docker container:
+
+   ```shell
+   docker run -p 8888:8888 gpt4all-flask-server
+   ```
+
+   The server will be accessible at `http://localhost:8888`.
+
+## Getting the most of your local LLM
+
+Inference Speed Inference speed of a local LLM depends on two factors: model size and the number of tokens given as input. It is not advised to prompt local LLMs with large chunks of context as their inference speed will heavily degrade. You will likely want to run GPT4All models on GPU if you would like to utilize context windows larger than 750 tokens. Native GPU support for GPT4All models is planned.
+
+Inference Performance Which model is best? That question depends on your use-case. The ability of an LLM to faithfully follow instructions is conditioned on the quantity and diversity of the pre-training data it trained on and the diversity, quality and factuality of the data the LLM was fine-tuned on. A goal of GPT4All is to bring the most powerful local assistant model to your desktop and Nomic AI is actively working on efforts to improve their performance and quality.
+
 ## License
 
-The GPT4All library has the following license:
+This project is licensed under the [MIT License](LICENSE).
 
-MIT License
+## Acknowledgements
 
-Copyright (c) 2023 Nomic, Inc.
+This project leverages the GPT4All python bindings and the ggml library. For more information about the supported model architectures and their differences, refer to the [GPT4All FAQ](https://github.com/nomic-ai/gpt4all#faq).
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
-
-## Source
-
-This README has been created based on the material found in the following sources:
-
-- [GPT4All Python API](https://docs.gpt4all.io/gpt4all_python.html)
-- [GPT4All FAQ](https://docs.gpt4all.io/faq.html)
+For any questions or issues, please refer to the [GPT4All repository](https://github.com/nomic-ai/gpt4all) or contact the GPT4All team.

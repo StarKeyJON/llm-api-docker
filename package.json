@@ -10,6 +10,6 @@
   },
   "scripts": {
     "docker_build": "docker build -t gpt4all-server .",
-    "docker_run": "docker run -p 4200:4200 gpt4all-server"
+    "docker_run": "docker run -p 8888:8888 gpt4all-server"
   }
 }
