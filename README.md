@@ -1,6 +1,27 @@
 
 # GPT4All Flask Server
 
+:TOC:
+
+- [GPT4All Flask Server](#gpt4all-flask-server)
+  - [Prerequisites](#prerequisites)
+  - [Getting Started](#getting-started)
+  - [Supported Models](#supported-models)
+  - [Getting the most of your local LLM](#getting-the-most-of-your-local-llm)
+  - [Best Practices](#best-practices)
+  - [API Endpoints](#api-endpoints)
+    - [`/v0/language-models/chat-completions` (POST)](#v0language-modelschat-completions-post)
+    - [`/v0/language-models/generate` (POST)](#v0language-modelsgenerate-post)
+    - [`/v0/language-models/retrieve` (POST)](#v0language-modelsretrieve-post)
+    - [`/v0/models` (GET)](#v0models-get)
+  - [API References](#api-references)
+    - [`gpt4all.GPT4All(model_name, model_path=None, model_type=None, allow_download=True)`](#gpt4allgpt4allmodel_name-model_pathnone-model_typenone-allow_downloadtrue)
+    - [`gpt4all.GPT4All.chat_completion(messages, default_prompt_header=True, default_prompt_footer=True, verbose=True, streaming=True, **generate_kwargs)`](#gpt4allgpt4allchat_completionmessages-default_prompt_headertrue-default_prompt_footertrue-verbosetrue-streamingtrue-generate_kwargs)
+    - [`gpt4all.GPT4All.generate(prompt, streaming=True, **generate_kwargs)`](#gpt4allgpt4allgenerateprompt-streamingtrue-generate_kwargs)
+    - [`gpt4all.GPT4All.generator(prompt, **generate_kwargs)`](#gpt4allgpt4allgeneratorprompt-generate_kwargs)
+  - [License](#license)
+  - [Acknowledgements](#acknowledgements)
+
 This repository contains the source code for a Flask server that provides endpoints for interacting with the GPT4All language models.
 It includes a Dockerfile that allows for effortless containerization of the local LLM server, enhancing its portability and reproducibility across different platforms, as well as offering unrivaled privacy. Running a local LLM within a Docker container not only simplifies your setup process but also isolates the application and its dependencies, minimizing conflicts and ensuring a uniform operational environment.
 
@@ -53,6 +74,105 @@ The supported architectures are:
 - LLAMA - Based off of the LLAMA architecture with examples found [here](https://docs.gpt4all.io/examples/llama_examples.html)
 - MPT - Based off of Mosaic ML's MPT architecture with examples found [here](https://docs.gpt4all.io/examples/mpt_examples.html)
 
+<details>
+<summary>Currently listed models retrieved from the /v0/models endpoint</summary>
+
+```javascript
+[
+ {
+  "bestGPTJ": "true",
+  "description": "GPT-J 6B finetuned by Nomic AI on the latest GPT4All dataset.<br>- Licensed for commercial use.<br>- Fast responses.",
+  "filename": "ggml-gpt4all-j-v1.3-groovy.bin",
+  "filesize": "3785248281",
+  "isDefault": "true",
+  "md5sum": "81a09a0ddf89690372fc296ff7f625af"
+ },
+ {
+  "bestLlama": "true",
+  "description": "LLaMA 13B finetuned by Nomic AI on the latest GPT4All dataset.<br>- Cannot be used commercially.<br>- Slower responses but higher quality.",
+  "filename": "ggml-gpt4all-l13b-snoozy.bin",
+  "filesize": "8136770688",
+  "md5sum": "91f886b68fbce697e9a3cd501951e455"
+ },
+ {
+  "bestMPT": "true",
+  "description": "MPT 7B chat model trained by Mosaic ML.<br>- Cannot be used commercially.<br>- Fast responses.",
+  "filename": "ggml-mpt-7b-chat.bin",
+  "filesize": "4854401050",
+  "isDefault": "true",
+  "md5sum": "756249d3d6abe23bde3b1ae272628640",
+  "requires": "2.4.1"
+ },
+ {
+  "description": "LLaMa 13B finetuned on over 300,000 curated and uncensored instructions instructions.<br>- Cannot be used commercially.<br>- Best finetuned LLaMA model.<br>- This model was fine-tuned by Nous Research, with Teknium and Karan4D leading the fine tuning process and dataset curation, Redmond AI sponsoring the compute, and several other contributors. The result is an enhanced Llama 13b model that rivals GPT-3.5-turbo in performance across a variety of tasks. This model stands out for its long responses, low hallucination rate, and absence of OpenAI censorship mechanisms.",
+  "filename": "ggml-v3-13b-hermes-q5_1.bin",
+  "filesize": "8136777088",
+  "md5sum": "f26b99c320ff358f4223a973217eb31e",
+  "requires": "2.4.5",
+  "url": "https://huggingface.co/eachadea/ggml-nous-hermes-13b/resolve/main/ggml-v3-13b-hermes-q5_1.bin"
+ },
+ {
+  "description": "LLaMA 7B finetuned by teams from UC Berkeley, CMU, Stanford, MBZUAI, and UC San Diego.<br>- Cannot be used commercially.",
+  "filename": "ggml-vicuna-7b-1.1-q4_2.bin",
+  "filesize": "4212859520",
+  "md5sum": "29119f8fa11712704c6b22ac5ab792ea"
+ },
+ {
+  "description": "LLaMA 13B and trained by teams from UC Berkeley, CMU, Stanford, MBZUAI, and UC San Diego.<br>- Cannot be used commercially.",
+  "filename": "ggml-vicuna-13b-1.1-q4_2.bin",
+  "filesize": "8136770688",
+  "md5sum": "95999b7b0699e2070af63bf5d34101a8"
+ },
+ {
+  "description": "LLaMA 7B finetuned by Microsoft and Peking University.<br>- Cannot be used commercially.",
+  "filename": "ggml-wizardLM-7B.q4_2.bin",
+  "filesize": "4212864640",
+  "md5sum": "99e6d129745a3f1fb1121abed747b05a"
+ },
+ {
+  "description": "LLaMa 13B finetuned with RLHF by Stability AI.<br>- Cannot be used commercially.",
+  "filename": "ggml-stable-vicuna-13B.q4_2.bin",
+  "filesize": "8136777088",
+  "md5sum": "6cb4ee297537c9133bddab9692879de0"
+ },
+ {
+  "description": "MPT 7B pre-trained by Mosaic ML. Trained for text completion with no assistant finetuning.<br>- Licensed for commercial use.",
+  "filename": "ggml-mpt-7b-base.bin",
+  "filesize": "4854401028",
+  "md5sum": "120c32a51d020066288df045ef5d52b9",
+  "requires": "2.4.1"
+ },
+ {
+  "description": "LLaMa 13B fine-tuned on ~180,000 instructions by Nous Research.<br>- Cannot be used commercially.",
+  "filename": "ggml-nous-gpt4-vicuna-13b.bin",
+  "filesize": "8136777088",
+  "md5sum": "d5eafd5b0bd0d615cfd5fd763f642dfe"
+ },
+ {
+  "description": "MPT 7B instruction finetuned by Mosaic ML.<br>- Licensed for commercial use.",
+  "filename": "ggml-mpt-7b-instruct.bin",
+  "filesize": "4854401028",
+  "md5sum": "1cfa4958f489f0a0d1ffdf6b37322809",
+  "requires": "2.4.1"
+ },
+ {
+  "description": "LLaMa 13B finetuned on the uncensored assistant and instruction data.<br>- Cannot be used commercially.",
+  "filename": "ggml-wizard-13b-uncensored.bin",
+  "filesize": "8136777088",
+  "md5sum": "679fc463f01388ea2d339664af0a0836"
+ },
+ {
+  "description": "Replit 3B code model trained on subset of the Stack. Licensed for commercial use.",
+  "filename": "ggml-replit-code-v1-3b.bin",
+  "filesize": "5202046853",
+  "md5sum": "615890cb571fcaa0f70b2f8d15ef809e",
+  "requires": "2.4.7",
+  "url": "https://huggingface.co/nomic-ai/ggml-replit-code-v1-3b/resolve/main/ggml-replit-code-v1-3b.bin"
+ }
+]
+```
+
+</details>
 ## Getting the most of your local LLM
 
 Inference Speed Inference speed of a local LLM depends on two factors: model size and the number of tokens given as input. It is not advised to prompt local LLMs with large chunks of context as their inference speed will heavily degrade. You will likely want to run GPT4All models on GPU if you would like to utilize context windows larger than 750 tokens. Native GPU support for GPT4All models is planned.
