@@ -13,7 +13,7 @@ The server supports chat completions, text generation, model retrieval, and mode
 
 ## Getting Started
 
-To run the server locally, follow these steps:
+To run the server, follow these steps:
 
 1. Clone the repository:
 
@@ -27,16 +27,18 @@ To run the server locally, follow these steps:
    cd llm-api-docker
    ```
 
-3. Install the required dependencies:
+    Make sure you have Docker downloaded and running.
+
+3. Build the Docker image:
 
    ```shell
-   pip install -r requirements.txt
+   yarn run docker_build
    ```
 
-4. Start the Flask server:
+4. Run the Docker container:
 
    ```shell
-   python server.py
+   yarn run docker_run
    ```
 
    The server will start running on `http://localhost:8888`.
@@ -50,6 +52,12 @@ The supported architectures are:
 - GPTJ - Based off of the GPT-J architecture with examples found [here](https://docs.gpt4all.io/examples/gptj_examples.html)
 - LLAMA - Based off of the LLAMA architecture with examples found [here](https://docs.gpt4all.io/examples/llama_examples.html)
 - MPT - Based off of Mosaic ML's MPT architecture with examples found [here](https://docs.gpt4all.io/examples/mpt_examples.html)
+
+## Getting the most of your local LLM
+
+Inference Speed Inference speed of a local LLM depends on two factors: model size and the number of tokens given as input. It is not advised to prompt local LLMs with large chunks of context as their inference speed will heavily degrade. You will likely want to run GPT4All models on GPU if you would like to utilize context windows larger than 750 tokens. Native GPU support for GPT4All models is planned.
+
+Inference Performance Which model is best? That question depends on your use-case. The ability of an LLM to faithfully follow instructions is conditioned on the quantity and diversity of the pre-training data it trained on and the diversity, quality and factuality of the data the LLM was fine-tuned on. A goal of GPT4All is to bring the most powerful local assistant model to your desktop and Nomic AI is actively working on efforts to improve their performance and quality.
 
 ## Best Practices
 
@@ -203,31 +211,6 @@ Parameters:
 Returns:
 
 - `str`: Raw string of generated model response.
-
-## Docker
-
-A Dockerfile is provided to simplify the deployment of the Flask server. To build and run the Docker image, follow these steps:
-
-1. Build the Docker
- image:
-
-   ```shell
-   docker build -t gpt4all-flask-server .
-   ```
-
-2. Run the Docker container:
-
-   ```shell
-   docker run -p 8888:8888 gpt4all-flask-server
-   ```
-
-   The server will be accessible at `http://localhost:8888`.
-
-## Getting the most of your local LLM
-
-Inference Speed Inference speed of a local LLM depends on two factors: model size and the number of tokens given as input. It is not advised to prompt local LLMs with large chunks of context as their inference speed will heavily degrade. You will likely want to run GPT4All models on GPU if you would like to utilize context windows larger than 750 tokens. Native GPU support for GPT4All models is planned.
-
-Inference Performance Which model is best? That question depends on your use-case. The ability of an LLM to faithfully follow instructions is conditioned on the quantity and diversity of the pre-training data it trained on and the diversity, quality and factuality of the data the LLM was fine-tuned on. A goal of GPT4All is to bring the most powerful local assistant model to your desktop and Nomic AI is actively working on efforts to improve their performance and quality.
 
 ## License
 
