@@ -15,7 +15,7 @@ To run the server locally, follow these steps:
 1. Clone the repository:
 
    ```shell
-   git clone https://github.com/StarKeyJON/llm-api-docker
+   git clone https://github.com/StarKeyJON/llm-api-docker.git
    ```
 
 2. Change to the project directory:
