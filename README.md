@@ -1,6 +1,11 @@
 
 # GPT4All Flask Server
 
+This repository contains the source code for a Flask server that provides endpoints for interacting with the GPT4All language models.
+It includes a Dockerfile that allows for effortless containerization of the local LLM server, enhancing its portability and reproducibility across different platforms, as well as offering unrivaled privacy. Running a local LLM within a Docker container not only simplifies your setup process but also isolates the application and its dependencies, minimizing conflicts and ensuring a uniform operational environment.
+
+The server supports chat completions, text generation, model retrieval, and model listing. It uses the GPT4All python bindings to interface with the models.
+
 :TOC:
 
 - [GPT4All Flask Server](#gpt4all-flask-server)
@@ -21,11 +26,6 @@
     - [`gpt4all.GPT4All.generator(prompt, **generate_kwargs)`](#gpt4allgpt4allgeneratorprompt-generate_kwargs)
   - [License](#license)
   - [Acknowledgements](#acknowledgements)
-
-This repository contains the source code for a Flask server that provides endpoints for interacting with the GPT4All language models.
-It includes a Dockerfile that allows for effortless containerization of the local LLM server, enhancing its portability and reproducibility across different platforms, as well as offering unrivaled privacy. Running a local LLM within a Docker container not only simplifies your setup process but also isolates the application and its dependencies, minimizing conflicts and ensuring a uniform operational environment.
-
-The server supports chat completions, text generation, model retrieval, and model listing. It uses the GPT4All python bindings to interface with the models.
 
 ## Prerequisites
 
