@@ -1,0 +1,15 @@
+{
+  "name": "llm_api_docker",
+  "version": "1.0.0",
+  "main": "index.js",
+  "description": "Python bindings and an API to our C/C++ model backend libraries",
+  "license": "MIT",
+  "author": {
+    "name": "Jeremiah O. Nolet",
+    "email": "starkeyjon@protonmail.com"
+  },
+  "scripts": {
+    "docker_build": "docker build -t gpt4all-server .",
+    "docker_run": "docker run -p 4200:4200 gpt4all-server"
+  }
+}
