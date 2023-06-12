@@ -24,7 +24,7 @@ To run the server locally, follow these steps:
 2. Change to the project directory:
 
    ```shell
-   cd your_repository
+   cd llm-api-docker
    ```
 
 3. Install the required dependencies:
