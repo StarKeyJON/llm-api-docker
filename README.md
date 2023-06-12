@@ -8,24 +8,23 @@ The server supports chat completions, text generation, model retrieval, and mode
 
 :TOC:
 
-- [GPT4All Flask Server](#gpt4all-flask-server)
-  - [Prerequisites](#prerequisites)
-  - [Getting Started](#getting-started)
-  - [Supported Models](#supported-models)
-  - [Getting the most of your local LLM](#getting-the-most-of-your-local-llm)
-  - [Best Practices](#best-practices)
-  - [API Endpoints](#api-endpoints)
-    - [`/v0/language-models/chat-completions` (POST)](#v0language-modelschat-completions-post)
-    - [`/v0/language-models/generate` (POST)](#v0language-modelsgenerate-post)
-    - [`/v0/language-models/retrieve` (POST)](#v0language-modelsretrieve-post)
-    - [`/v0/models` (GET)](#v0models-get)
-  - [API References](#api-references)
-    - [`gpt4all.GPT4All(model_name, model_path=None, model_type=None, allow_download=True)`](#gpt4allgpt4allmodel_name-model_pathnone-model_typenone-allow_downloadtrue)
-    - [`gpt4all.GPT4All.chat_completion(messages, default_prompt_header=True, default_prompt_footer=True, verbose=True, streaming=True, **generate_kwargs)`](#gpt4allgpt4allchat_completionmessages-default_prompt_headertrue-default_prompt_footertrue-verbosetrue-streamingtrue-generate_kwargs)
-    - [`gpt4all.GPT4All.generate(prompt, streaming=True, **generate_kwargs)`](#gpt4allgpt4allgenerateprompt-streamingtrue-generate_kwargs)
-    - [`gpt4all.GPT4All.generator(prompt, **generate_kwargs)`](#gpt4allgpt4allgeneratorprompt-generate_kwargs)
-  - [License](#license)
-  - [Acknowledgements](#acknowledgements)
+- [Prerequisites](#prerequisites)
+- [Getting Started](#getting-started)
+- [Supported Models](#supported-models)
+- [Getting the most of your local LLM](#getting-the-most-of-your-local-llm)
+- [Best Practices](#best-practices)
+- [API Endpoints](#api-endpoints)
+  - [`/v0/language-models/chat-completions` (POST)](#v0language-modelschat-completions-post)
+  - [`/v0/language-models/generate` (POST)](#v0language-modelsgenerate-post)
+  - [`/v0/language-models/retrieve` (POST)](#v0language-modelsretrieve-post)
+  - [`/v0/models` (GET)](#v0models-get)
+ - [API References](#api-references)
+  - [`gpt4all.GPT4All(model_name, model_path=None, model_type=None, allow_download=True)`](#gpt4allgpt4allmodel_name-model_pathnone-model_typenone-allow_downloadtrue)
+  - [`gpt4all.GPT4All.chat_completion(messages, default_prompt_header=True, default_prompt_footer=True, verbose=True, streaming=True, **generate_kwargs)`](#gpt4allgpt4allchat_completionmessages-default_prompt_headertrue-default_prompt_footertrue-verbosetrue-streamingtrue-generate_kwargs)
+  - [`gpt4all.GPT4All.generate(prompt, streaming=True, **generate_kwargs)`](#gpt4allgpt4allgenerateprompt-streamingtrue-generate_kwargs)
+  - [`gpt4all.GPT4All.generator(prompt, **generate_kwargs)`](#gpt4allgpt4allgeneratorprompt-generate_kwargs)
+- [License](#license)
+- [Acknowledgements](#acknowledgements)
 
 ## Prerequisites
 
@@ -173,6 +172,7 @@ The supported architectures are:
 ```
 
 </details>
+
 ## Getting the most of your local LLM
 
 Inference Speed Inference speed of a local LLM depends on two factors: model size and the number of tokens given as input. It is not advised to prompt local LLMs with large chunks of context as their inference speed will heavily degrade. You will likely want to run GPT4All models on GPU if you would like to utilize context windows larger than 750 tokens. Native GPU support for GPT4All models is planned.
